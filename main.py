@@ -2,18 +2,19 @@ from gensim.models import Word2Vec
 from neural_net import NeuralNet
 
 
-def get_sentences_words_array(file_name):
+def get_sentences_words_array(file_names):
     sentences_words_array = [['']]
 
-    with open(file_name, 'r', encoding="utf8") as t:
+    for file_name in file_names:
+        with open(file_name, 'r', encoding="utf8") as t:
 
-        raw_sentences_array = t.read().split("\n\n")
-        for sentences_data in raw_sentences_array:
-            sentence = []
-            for word_data in sentences_data.splitlines()[2:]:
-                sentence.append(word_data.split("\t")[2])
+            raw_sentences_array = t.read().split("\n\n")
+            for sentences_data in raw_sentences_array:
+                sentence = []
+                for word_data in sentences_data.splitlines()[2:]:
+                    sentence.append(word_data.split("\t")[2])
 
-            sentences_words_array.append(sentence)
+                sentences_words_array.append(sentence)
 
     return sentences_words_array
 
@@ -53,9 +54,10 @@ def get_postags_vector(postags, input_postag):
     return postags_vector
 
 
-def get_structured_data(word_vector_model):
+def get_structured_data(word_vector_model, filename):
     structured_data = []
-    sentences, unique_postags = get_sentences_words_postag_array('id_gsd-ud-train.conllu')
+    label = []
+    sentences, unique_postags = get_sentences_words_postag_array(filename)
 
     for sentence in sentences[:]:
 
@@ -99,26 +101,35 @@ def get_structured_data(word_vector_model):
                         structured_data_item.append(w)
 
                 structured_data.append(structured_data_item)
+                label.append(sentence[index][1])
 
-    return structured_data, unique_postags
+    return structured_data, label
 
 
-def train():
-    word_vector_model = get_word_vector_model(get_sentences_words_array('id_gsd-ud-train.conllu'))
-    data, label = get_structured_data(word_vector_model)
-    # NeuralNet().train(data, label)
-    print(label)
+def train(model):
+    data, label = get_structured_data(model, 'id_gsd-ud-train.conllu')
+
+    NeuralNet().train(data, label)
+    print(len(data[0]), len(data))
     pass
 
 
-def test():
-    word_vector_model = get_word_vector_model(get_sentences_words_array('id_gsd-ud-train.conllu'))
-    data, label = get_structured_data(word_vector_model)
+def test(model):
+    data, label = get_structured_data(model, 'id_gsd-ud-test.conllu')
 
-    print(data)
-    # NeuralNet().test(data, label)
+    print(len(data))
+    NeuralNet().test(data, label)
     pass
 
 
-train()
-test()
+sentences = get_sentences_words_array(['id_gsd-ud-train.conllu', 'id_gsd-ud-test.conllu'])
+print("sentences")
+
+word_vector_model = get_word_vector_model(sentences)
+print("word2vec")
+
+train(word_vector_model)
+print("train")
+
+test(word_vector_model)
+print("test")
