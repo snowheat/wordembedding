@@ -8,8 +8,7 @@ class NeuralNet:
         pass
 
     def train(self, data, label):
-        self.__model = neural_network.MLPClassifier(hidden_layer_sizes=100, max_iter=100, alpha=0.2,
-                                                    learning_rate_init=0.2)
+        self.__model = neural_network.MLPClassifier()
         # self.__model = linear_model.SGDClassifier()
 
         # self.__model = naive_bayes.GaussianNB()
