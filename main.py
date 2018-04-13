@@ -40,9 +40,11 @@ def get_sentences_words_postag_array(file_name):
 
     return sentences_words_postag_array, unique_postags
 
-
+# Fungsi untuk mendapat model Word2Vec
+# Return dari fungsi ini digunakan untuk mendapatkan nilai word vector dari data training dan testing
+# Korpus yang digunakan untuk training model adalah korpus training dan testing
 def get_word_vector_model(sentences):
-    model = Word2Vec(sentences, size=100, min_count=1, window=5, workers=4, sg=0)
+    model = Word2Vec(sentences, size=100, min_count=1, window=5, workers=4, sg=1)
     return model
 
 
@@ -119,6 +121,7 @@ def test(model):
     data, label = get_structured_data(model, 'id_gsd-ud-test.conllu')
     predictor.test(data, label)
     pass
+
 
 
 sentences = get_sentences_words_array(['id_gsd-ud-train.conllu', 'id_gsd-ud-test.conllu'])
