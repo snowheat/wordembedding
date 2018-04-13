@@ -1,6 +1,8 @@
 from gensim.models import Word2Vec
 from neural_net import NeuralNet
 
+predictor = NeuralNet()
+
 
 def get_sentences_words_array(file_names):
     sentences_words_array = [['']]
@@ -108,17 +110,14 @@ def get_structured_data(word_vector_model, filename):
 
 def train(model):
     data, label = get_structured_data(model, 'id_gsd-ud-train.conllu')
+    predictor.train(data, label)
 
-    NeuralNet().train(data, label)
-    print(len(data[0]), len(data))
     pass
 
 
 def test(model):
     data, label = get_structured_data(model, 'id_gsd-ud-test.conllu')
-
-    print(len(data))
-    NeuralNet().test(data, label)
+    predictor.test(data, label)
     pass
 
 

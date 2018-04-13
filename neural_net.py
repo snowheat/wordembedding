@@ -1,4 +1,4 @@
-from sklearn import neural_network
+from sklearn import neural_network, linear_model, naive_bayes
 import numpy as np
 
 
@@ -8,7 +8,11 @@ class NeuralNet:
         pass
 
     def train(self, data, label):
-        self.__model = neural_network.MLPClassifier()
+        self.__model = neural_network.MLPClassifier(hidden_layer_sizes=100, max_iter=100, alpha=0.2,
+                                                    learning_rate_init=0.2)
+        # self.__model = linear_model.SGDClassifier()
+
+        # self.__model = naive_bayes.GaussianNB()
         self.__model = self.__model.fit(data, label)
 
         # predicted_y = self.__model.predict(data)
@@ -18,5 +22,5 @@ class NeuralNet:
     def test(self, data, label):
         predicted_y = self.__model.predict(data)
 
-        print(np.mean(predicted_y == data))
+        print(np.mean(predicted_y == label))
         pass
